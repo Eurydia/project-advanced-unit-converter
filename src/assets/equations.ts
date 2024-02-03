@@ -1,4 +1,4 @@
-import { Quantities } from "./quantities";
+import { Quantities } from "./static/quantities";
 
 const EQUATION_REGISTRY: Equation[] = [];
 
