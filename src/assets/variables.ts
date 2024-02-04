@@ -49,3 +49,6 @@ variableRegister("Amount of substance", "n");
 variableRegister("Particle number", "N");
 variableRegister("Density", "\\rho");
 variableRegister("Mass", "m");
+variableRegister("Length", "l");
+variableRegister("Width", "h");
+variableRegister("Height", "w");

@@ -209,3 +209,38 @@ equationRegister(
 	],
 	[],
 );
+
+equationRegister(
+	"Density of a regular solid",
+	"\\rho = \\frac{m}{l\\times w\\times h}",
+	[
+		variableGet("Density"),
+		variableGet("Mass"),
+		variableGet("Length"),
+		variableGet("Width"),
+		variableGet("Height"),
+	],
+	[],
+);
+
+equationRegister(
+	"Archimedes' principle",
+	"F_{a} = \\rho_{\\text{fluid}} V_{\\text{displaced}}g",
+	[
+		variableGet("Force"),
+		variableGet("Density"),
+		variableGet("Volume"),
+	],
+	[constantGet("Gravitational acceleration")],
+);
+
+equationRegister(
+	"Vapour density",
+	"\\rho = \\frac{nM}{V}",
+	[
+		variableGet("Amount of substance"),
+		variableGet("Density"),
+		variableGet("Volume"),
+	],
+	[constantGet("Molar mass")],
+);

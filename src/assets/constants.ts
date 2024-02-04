@@ -33,3 +33,7 @@ constantRegister("Ideal gas constant", "R");
 constantRegister("Boltzmann constant ", "k_{B}");
 constantRegister("Avogadro constant", "N_{A}");
 constantRegister("Molar mass", "M");
+constantRegister(
+	"Gravitational acceleration",
+	"g",
+);

@@ -11,7 +11,7 @@ export const Graph: FC<GraphProps> = (props) => {
 	return (
 		<div>
 			<div>
-				{!first ? "Or" : <Fragment />} Apply{" "}
+				{!first ? "Or apply" : "Apply"}{" "}
 				{path.targetRule.label} to obtain{" "}
 				{path.variable.label}
 			</div>

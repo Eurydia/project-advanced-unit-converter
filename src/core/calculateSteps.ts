@@ -74,12 +74,6 @@ export const calculateSteps = (
 			relatedEquation.variables,
 		);
 
-		const restrictedRules = relatedRules.filter(
-			(rule) =>
-				rule.latexExpression !==
-				relatedEquation.latexExpression,
-		);
-
 		// const restrictedRules = relatedRules.filter(
 		// 	(rule) => {
 		// 		for (const v of rule.variables) {
@@ -100,6 +94,36 @@ export const calculateSteps = (
 		> = {};
 
 		for (const missingVar of missingVariables) {
+			const restrictedRules = relatedRules.filter(
+				(rule) => {
+					if (
+						rule.latexExpression ===
+						relatedEquation.latexExpression
+					) {
+						return false;
+					}
+
+					for (const v of rule.variables) {
+						if (
+							v.latexLabel ===
+							missingVar.latexLabel
+						) {
+							continue;
+						}
+
+						for (const missingVar of missingVariables) {
+							if (
+								missingVar.latexLabel ===
+								v.latexLabel
+							) {
+								return false;
+							}
+						}
+					}
+					return true;
+				},
+			);
+
 			missingPathToVar[missingVar.label] =
 				calculateSteps(
 					missingVar,

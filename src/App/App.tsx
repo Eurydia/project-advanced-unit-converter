@@ -9,12 +9,12 @@ import { Graph } from "./components/Graph";
 import { EquationRegistry } from "../assets/equations";
 
 export const App: FC = () => {
-	const targetVar = variableGet("Volume");
+	const targetVar = variableGet("Density");
 	const givenVars: Variable[] = [
-		variableGet("Area"),
-		variableGet("Amount of substance"),
+		variableGet("Pressure"),
+		// variableGet("Amount of substance"),
 		variableGet("Temperature"),
-		variableGet("Force"),
+		// variableGet("Force"),
 	];
 	return (
 		<div>
@@ -34,7 +34,7 @@ export const App: FC = () => {
 				return (
 					<div style={{ paddingLeft: "2rem" }}>
 						<Graph
-							first
+							first={index === 0}
 							key={`topgraph-${index}`}
 							path={path}
 						/>
