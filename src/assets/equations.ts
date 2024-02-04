@@ -1,203 +1,211 @@
-import { Quantities } from "./static/quantities";
+import {
+	Constant,
+	constantGet,
+} from "./constants";
+import {
+	Variable,
+	variableGet,
+} from "./variables";
 
-const EQUATION_REGISTRY: Equation[] = [];
+export const EquationRegistry: Equation[] = [];
 
 export type Equation = {
-	name: string;
-	variables: Quantities[];
-	constants: Quantities[];
+	label: string;
+	latexExpression: string;
+	variables: Variable[];
+	constants: Constant[];
 };
 
 const equationRegister = (
-	name: string,
-	variables: Quantities[],
-	constants: Quantities[],
+	label: string,
+	latexExpression: string,
+	variables: Variable[],
+	constants: Variable[],
 ): void => {
-	EQUATION_REGISTRY.push({
-		name,
+	EquationRegistry.push({
+		label,
+		latexExpression,
 		variables,
 		constants,
 	});
 };
 
-export const equationSearch = (
-	targetVar: Quantities,
-	startingVars: Quantities[],
-): Equation[] => {
-	const knownVars = [...startingVars];
-	let unusedEqs = [...EQUATION_REGISTRY];
+// export const equationSearch = (
+// 	targetVar: Quantities,
+// 	startingVars: Quantities[],
+// ): Equation[] => {
+// 	const knownVars = [...startingVars];
+// 	let unusedEqs = [...EQUATION_REGISTRY];
 
-	const layers: [Quantities, Equation][][] = [];
-	let currentLayer = -1;
+// 	const layers: [Quantities, Equation][][] = [];
+// 	let currentLayer = -1;
 
-	do {
-		const newLayer = equationApply(
-			unusedEqs,
-			knownVars,
-		);
+// 	do {
+// 		const newLayer = equationApply(
+// 			unusedEqs,
+// 			knownVars,
+// 		);
 
-		for (const item of newLayer) {
-			const [newKnownVar, usedEq] = item;
+// 		for (const item of newLayer) {
+// 			const [newKnownVar, usedEq] = item;
 
-			unusedEqs = unusedEqs.filter(
-				(eq) => eq !== usedEq,
-			);
-			knownVars.push(newKnownVar);
-		}
-		layers.push(newLayer);
-		currentLayer++;
-	} while (
-		layers[currentLayer].length > 0 &&
-		layers[currentLayer].filter(
-			([v]) => v === targetVar,
-		).length === 0
-	);
+// 			unusedEqs = unusedEqs.filter(
+// 				(eq) => eq !== usedEq,
+// 			);
+// 			knownVars.push(newKnownVar);
+// 		}
+// 		layers.push(newLayer);
+// 		currentLayer++;
+// 	} while (
+// 		layers[currentLayer].length > 0 &&
+// 		layers[currentLayer].filter(
+// 			([v]) => v === targetVar,
+// 		).length === 0
+// 	);
 
-	const layerRecord: Partial<
-		Record<Quantities, Equation>
-	> = {};
+// 	const layerRecord: Partial<
+// 		Record<Quantities, Equation>
+// 	> = {};
 
-	for (const layer of layers) {
-		for (const item of layer) {
-			const [itemVar, itemEq] = item;
-			layerRecord[itemVar] = itemEq;
-		}
-	}
-	if (layerRecord[targetVar] === undefined) {
-		return [];
-	}
+// 	for (const layer of layers) {
+// 		for (const item of layer) {
+// 			const [itemVar, itemEq] = item;
+// 			layerRecord[itemVar] = itemEq;
+// 		}
+// 	}
+// 	if (layerRecord[targetVar] === undefined) {
+// 		return [];
+// 	}
 
-	const steps: Equation[] = equationRetrace(
-		layerRecord,
-		[[targetVar, layerRecord[targetVar]!]],
-		startingVars,
-	);
+// 	const steps: Equation[] = equationRetrace(
+// 		layerRecord,
+// 		[[targetVar, layerRecord[targetVar]!]],
+// 		startingVars,
+// 	);
 
-	return steps;
-};
+// 	return steps;
+// };
 
-const equationRetrace = (
-	layerRecord: Partial<
-		Record<Quantities, Equation>
-	>,
-	goals: [Quantities, Equation][],
-	knownVars: Quantities[],
-): Equation[] => {
-	const steps: Equation[] = [];
-	const _knownVars = [...knownVars];
+// const equationRetrace = (
+// 	layerRecord: Partial<
+// 		Record<Quantities, Equation>
+// 	>,
+// 	goals: [Quantities, Equation][],
+// 	knownVars: Quantities[],
+// ): Equation[] => {
+// 	const steps: Equation[] = [];
+// 	const _knownVars = [...knownVars];
 
-	for (const goal of goals) {
-		const [goalVar, goalEq] = goal;
-		const diffVars = goalEq.variables.filter(
-			(eqVar) => !_knownVars.includes(eqVar),
-		);
+// 	for (const goal of goals) {
+// 		const [goalVar, goalEq] = goal;
+// 		const diffVars = goalEq.variables.filter(
+// 			(eqVar) => !_knownVars.includes(eqVar),
+// 		);
 
-		if (diffVars.length === 1) {
-			steps.push(goalEq);
-			_knownVars.push(goalVar);
-			continue;
-		}
+// 		if (diffVars.length === 1) {
+// 			steps.push(goalEq);
+// 			_knownVars.push(goalVar);
+// 			continue;
+// 		}
 
-		const nextGoals: [Quantities, Equation][] =
-			diffVars
-				.filter((diffVar) => diffVar !== goalVar)
-				.map((diffVar) => {
-					return [diffVar, layerRecord[diffVar]!];
-				});
+// 		const nextGoals: [Quantities, Equation][] =
+// 			diffVars
+// 				.filter((diffVar) => diffVar !== goalVar)
+// 				.map((diffVar) => {
+// 					return [diffVar, layerRecord[diffVar]!];
+// 				});
 
-		steps.push(
-			goalEq,
-			...equationRetrace(
-				layerRecord,
-				nextGoals,
-				_knownVars,
-			),
-		);
-	}
+// 		steps.push(
+// 			goalEq,
+// 			...equationRetrace(
+// 				layerRecord,
+// 				nextGoals,
+// 				_knownVars,
+// 			),
+// 		);
+// 	}
 
-	return steps;
-};
+// 	return steps;
+// };
 
-const equationApply = (
-	validEqs: Equation[],
-	knownVars: Quantities[],
-): [Quantities, Equation][] => {
-	const result: [Quantities, Equation][] = [];
+// const equationApply = (
+// 	validEqs: Equation[],
+// 	knownVars: Quantities[],
+// ): [Quantities, Equation][] => {
+// 	const result: [Quantities, Equation][] = [];
 
-	for (const eq of validEqs) {
-		if (
-			equationMissingIndex(eq, knownVars) === 1
-		) {
-			const diffVars = eq.variables.filter(
-				(eqVar) => !knownVars.includes(eqVar),
-			);
-			result.push([diffVars[0], eq]);
-		}
-	}
+// 	for (const eq of validEqs) {
+// 		if (
+// 			equationMissingIndex(eq, knownVars) === 1
+// 		) {
+// 			const diffVars = eq.variables.filter(
+// 				(eqVar) => !knownVars.includes(eqVar),
+// 			);
+// 			result.push([diffVars[0], eq]);
+// 		}
+// 	}
 
-	return result;
-};
+// 	return result;
+// };
 
-const equationMissingIndex = (
-	eq: Equation,
-	knownVars: Quantities[],
-): number => {
-	let knownVarCount = 0;
-	const eqVars = eq.variables;
+// const equationMissingIndex = (
+// 	eq: Equation,
+// 	knownVars: Quantities[],
+// ): number => {
+// 	let knownVarCount = 0;
+// 	const eqVars = eq.variables;
 
-	for (const knownVar of knownVars) {
-		if (eq.variables.includes(knownVar)) {
-			knownVarCount++;
-		}
-	}
+// 	for (const knownVar of knownVars) {
+// 		if (eq.variables.includes(knownVar)) {
+// 			knownVarCount++;
+// 		}
+// 	}
 
-	return eqVars.length - knownVarCount;
-};
+// 	return eqVars.length - knownVarCount;
+// };
 
 equationRegister(
 	"Ideal Gas Law",
+	"pV = nRT",
 	[
-		Quantities.PRESSURE,
-		Quantities.VOLUME,
-		Quantities.AMOUNT_OF_SUBSTANCE,
-		Quantities.TEMPERATURE,
+		variableGet("Pressure"),
+		variableGet("Volume"),
+		variableGet("Amount of substance"),
+		variableGet("Temperature"),
 	],
-	[Quantities.IDEAL_GAS_CONSTANT],
+	[constantGet("Ideal gas constant")],
 );
 equationRegister(
 	"Ideal Gas Law",
+	"pV = nk_{B}N_{A}T",
 	[
-		Quantities.PRESSURE,
-		Quantities.VOLUME,
-		Quantities.NUMBER_OF_GAS_PARTICLES,
-		Quantities.TEMPERATURE,
+		variableGet("Pressure"),
+		variableGet("Volume"),
+		variableGet("Particle number"),
+		variableGet("Temperature"),
 	],
-	[Quantities.BOLTZMANN_CONSTANT],
+	[
+		constantGet("Boltzmann constant"),
+		constantGet("Avogadro constant"),
+	],
 );
 equationRegister(
 	"Definition of Pressure",
+	"p = \\frac{F}{A}",
 	[
-		Quantities.PRESSURE,
-		Quantities.FORCE,
-		Quantities.AREA,
+		variableGet("Pressure"),
+		variableGet("Force"),
+		variableGet("Area"),
 	],
 	[],
 );
 equationRegister(
 	"Definition of Density",
+	"\\rho = \\frac{m}{V}",
 	[
-		Quantities.DENSITY,
-		Quantities.MASS,
-		Quantities.VOLUME,
-	],
-	[],
-);
-equationRegister(
-	"Definition of Molar Mass",
-	[
-		Quantities.AMOUNT_OF_SUBSTANCE,
-		Quantities.MOLAR_MASS,
-		Quantities.MASS,
+		variableGet("Density"),
+		variableGet("Mass"),
+		variableGet("Volume"),
 	],
 	[],
 );
