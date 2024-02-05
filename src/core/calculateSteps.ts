@@ -1,5 +1,5 @@
-import { Equation } from "../assets/equations";
-import { Variable } from "../assets/variables";
+import { Equation } from "@assets/equations";
+import { Variable } from "@assets/variables";
 
 export type Path = {
 	variable: Variable;

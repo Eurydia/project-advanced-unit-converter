@@ -1,15 +1,23 @@
 import { FC, useEffect, useRef } from "react";
 
 import katex from "katex";
+import {
+	Typography,
+	TypographyProps,
+} from "@mui/material";
 
-type KatexProps = {
+type KatexProps = Omit<
+	TypographyProps,
+	"children"
+> & {
 	children: string;
 };
 export const Katex: FC<KatexProps> = (props) => {
-	const { children } = props;
+	const { children, ...rest } = props;
 
-	const containerRef =
-		useRef<HTMLDivElement | null>(null);
+	const containerRef = useRef<HTMLElement | null>(
+		null,
+	);
 
 	useEffect(() => {
 		if (containerRef.current === null) {
@@ -18,5 +26,10 @@ export const Katex: FC<KatexProps> = (props) => {
 		katex.render(children, containerRef.current);
 	}, [children]);
 
-	return <div ref={containerRef} />;
+	return (
+		<Typography
+			ref={containerRef}
+			{...rest}
+		/>
+	);
 };

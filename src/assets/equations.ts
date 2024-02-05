@@ -1,11 +1,11 @@
 import {
 	Constant,
 	constantGet,
-} from "./constants";
+} from "@assets/constants";
 import {
 	Variable,
 	variableGet,
-} from "./variables";
+} from "@assets/variables";
 
 export const EquationRegistry: Equation[] = [];
 

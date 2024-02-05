@@ -4,15 +4,13 @@ import { Katex } from "./Katex";
 
 type GraphProps = {
 	path: Path;
-	first?: boolean;
 };
 export const Graph: FC<GraphProps> = (props) => {
-	const { path, first } = props;
+	const { path } = props;
 	return (
 		<div>
 			<div>
-				{!first ? "Or apply" : "Apply"}{" "}
-				{path.targetRule.label} to obtain{" "}
+				Apply {path.targetRule.label} to obtain{" "}
 				{path.variable.label}
 			</div>
 			<Katex>
@@ -43,7 +41,6 @@ export const Graph: FC<GraphProps> = (props) => {
 											return (
 												<Graph
 													key={`subgraph-${index}`}
-													first={index === 0}
 													path={missingPath}
 												/>
 											);
