@@ -100,18 +100,6 @@ equationRegister(
 );
 
 equationRegister(
-	"Definition of volume",
-	"V = l\\times w\\times h",
-	[
-		variableGet("Volume"),
-		variableGet("Length"),
-		variableGet("Width"),
-		variableGet("Height"),
-	],
-	[],
-);
-
-equationRegister(
 	"Newton's second law of motion",
 	"F = ma",
 	[
@@ -123,35 +111,33 @@ equationRegister(
 );
 
 equationRegister(
-	"Vapour density",
-	"\\rho = \\frac{nM}{V}",
+	"Definition of displacement",
+	"s = \\Delta x",
 	[
-		variableGet("Amount of substance"),
-		variableGet("Density"),
-		variableGet("Volume"),
-	],
-	[constantGet("Molar mass")],
-);
-
-equationRegister(
-	"First equation of motion",
-	"v = u + at",
-	[
-		variableGet("Speed"),
-		variableGet("Acceleration"),
-		variableGet("Time"),
+		variableGet("Displacement"),
+		variableGet("Change in position"),
 	],
 	[],
 );
 
 equationRegister(
-	"Second equation of motion",
-	"s = ut + \\frac{1}{2}at^{2}",
+	"Average velocity",
+	"v = \\frac{\\Delta x}{\\Delta t}",
 	[
-		variableGet("Distance"),
+		variableGet("Velocity"),
+		variableGet("Displacement"),
+		variableGet("Duration"),
+	],
+	[],
+);
+
+equationRegister(
+	"Average acceleration",
+	"\\bold{a} = \\frac{\\Delta v}{\\Delta t}",
+	[
 		variableGet("Acceleration"),
-		variableGet("Speed"),
-		variableGet("Time"),
+		variableGet("Change in velocity"),
+		variableGet("Duration"),
 	],
 	[],
 );

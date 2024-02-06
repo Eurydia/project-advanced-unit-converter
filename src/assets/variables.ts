@@ -45,14 +45,20 @@ variableRegister("Area", "A");
 variableRegister("Acceleration", "a");
 variableRegister("Force", "F");
 variableRegister("Volume", "V");
-variableRegister("Distance", "s");
+variableRegister("Displacement", "s");
+variableRegister(
+	"Change in position",
+	"\\Delta x",
+);
 variableRegister("Time", "t");
-variableRegister("Speed", "v");
+variableRegister("Duration", "\\Delta t");
+variableRegister("Velocity", "v");
+variableRegister(
+	"Change in velocity",
+	"\\Delta v",
+);
 variableRegister("Temperature", "T");
 variableRegister("Amount of substance", "n");
 variableRegister("Particle number", "N");
 variableRegister("Density", "\\rho");
 variableRegister("Mass", "m");
-variableRegister("Length", "l");
-variableRegister("Width", "h");
-variableRegister("Height", "w");

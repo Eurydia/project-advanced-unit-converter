@@ -22,21 +22,54 @@ import { Graph } from "App/components/Graph";
 import { calculateSteps } from "@core/calculateSteps";
 
 export const App: FC = () => {
-	const [targetVarLabels, setTargetVarlabels] =
+	const [targetVarLabels, setDesiredLabels] =
 		useState<string[]>([]);
-	const [knownVarLabels, setKnownVarLabels] =
-		useState<string[]>([]);
+	const [givenLabels, setGivenLabels] = useState<
+		string[]
+	>([]);
 	const [
 		excludedEquations,
 		setExcludedEquations,
 	] = useState<string[]>([]);
+
+	const handleGivenLabelsChange = (
+		labels: string[],
+	) => {
+		setGivenLabels(labels);
+		setDesiredLabels((prevLabels) => {
+			const next = [];
+			for (const prevLabel of prevLabels) {
+				if (labels.includes(prevLabel)) {
+					continue;
+				}
+				next.push(prevLabel);
+			}
+			return next;
+		});
+	};
+
+	const handleDesiredLabelsChange = (
+		labels: string[],
+	) => {
+		setDesiredLabels(labels);
+		setGivenLabels((prevLabels) => {
+			const next = [];
+			for (const prevLabel of prevLabels) {
+				if (labels.includes(prevLabel)) {
+					continue;
+				}
+				next.push(prevLabel);
+			}
+			return next;
+		});
+	};
 
 	const targetVar =
 		targetVarLabels.length > 0
 			? variableGet(targetVarLabels[0])
 			: variableGet("-");
 	const givenVars: Variable[] =
-		knownVarLabels.map(variableGet);
+		givenLabels.map(variableGet);
 
 	return (
 		<Fragment>
@@ -63,7 +96,9 @@ export const App: FC = () => {
 						>
 							<VariableSelector
 								value={targetVarLabels}
-								onChange={setTargetVarlabels}
+								onChange={
+									handleDesiredLabelsChange
+								}
 								options={Object.keys(
 									VariableRegistry,
 								)}
@@ -85,8 +120,8 @@ export const App: FC = () => {
 						>
 							<VariableSelector
 								multiple
-								value={knownVarLabels}
-								onChange={setKnownVarLabels}
+								value={givenLabels}
+								onChange={handleGivenLabelsChange}
 								options={Object.keys(
 									VariableRegistry,
 								)}
@@ -117,7 +152,10 @@ export const App: FC = () => {
 						</Box>
 					}
 					slotCenter={
-						<Box>
+						<Box
+							height="100vh"
+							overflow="auto"
+						>
 							{calculateSteps(
 								targetVar,
 								givenVars,
