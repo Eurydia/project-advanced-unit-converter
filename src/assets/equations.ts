@@ -43,7 +43,7 @@ equationRegister(
 );
 equationRegister(
 	"Avogadro's law",
-	"V\\propto n",
+	"\\frac{V_{1}}{n_{1}} = \\frac{V_{2}}{n_{2}}",
 	[
 		variableGet("Volume"),
 		variableGet("Amount of substance"),
@@ -51,8 +51,8 @@ equationRegister(
 	[],
 );
 equationRegister(
-	"Boyle's law",
-	"P\\propto \\frac{1}{V}",
+	"Boyle-Mariotte's law",
+	"P_{1}V_{1} = P_{2}V_{2}",
 	[
 		variableGet("Volume"),
 		variableGet("Pressure"),
@@ -61,7 +61,7 @@ equationRegister(
 );
 equationRegister(
 	"Charles' law",
-	"V\\propto T",
+	"\\frac{V_{1}}{T_{1}} = \\frac{V_{2}}{T_{2}}",
 	[
 		variableGet("Volume"),
 		variableGet("Temperature"),
@@ -70,7 +70,7 @@ equationRegister(
 );
 equationRegister(
 	"Gay-Lussac's law",
-	"P\\propto T",
+	"\\frac{P_{1}}{T_{1}} = \\frac{P_{2}}{T_{2}}",
 	[
 		variableGet("Pressure"),
 		variableGet("Temperature"),
@@ -78,20 +78,6 @@ equationRegister(
 	[],
 );
 
-// equationRegister(
-// 	"Ideal Gas Law",
-// 	"pV = nk_{B}N_{A}T",
-// 	[
-// 		variableGet("Pressure"),
-// 		variableGet("Volume"),
-// 		variableGet("Particle number"),
-// 		variableGet("Temperature"),
-// 	],
-// 	[
-// 		constantGet("Boltzmann constant"),
-// 		constantGet("Avogadro constant"),
-// 	],
-// );
 equationRegister(
 	"Definition of Pressure",
 	"p = \\frac{F}{A}",
@@ -126,17 +112,6 @@ equationRegister(
 );
 
 equationRegister(
-	"Archimedes' principle",
-	"F_{a} = \\rho_{\\text{fluid}} V_{\\text{displaced}}g",
-	[
-		variableGet("Force"),
-		variableGet("Density"),
-		variableGet("Volume"),
-	],
-	[constantGet("Gravitational acceleration")],
-);
-
-equationRegister(
 	"Newton's second law of motion",
 	"F = ma",
 	[
@@ -164,7 +139,6 @@ equationRegister(
 	[
 		variableGet("Speed"),
 		variableGet("Acceleration"),
-		variableGet("Initial speed"),
 		variableGet("Time"),
 	],
 	[],
@@ -176,7 +150,7 @@ equationRegister(
 	[
 		variableGet("Distance"),
 		variableGet("Acceleration"),
-		variableGet("Initial speed"),
+		variableGet("Speed"),
 		variableGet("Time"),
 	],
 	[],

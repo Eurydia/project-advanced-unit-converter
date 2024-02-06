@@ -12,7 +12,6 @@ import {
 import {
 	CheckBoxOutlineBlankRounded,
 	CheckBoxRounded,
-	IndeterminateCheckBoxRounded,
 } from "@mui/icons-material";
 
 import { Katex } from "App/components/Katex";

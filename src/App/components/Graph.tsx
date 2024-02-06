@@ -1,16 +1,6 @@
-import {
-	FC,
-	Fragment,
-	useEffect,
-	useState,
-} from "react";
+import { FC, Fragment } from "react";
 
-import {
-	Box,
-	MenuItem,
-	Select,
-	Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { Path } from "../../core/calculateSteps";
 
@@ -21,41 +11,6 @@ type GraphProps = {
 };
 export const Graph: FC<GraphProps> = (props) => {
 	const { path } = props;
-
-	const [subPathRecord, setSubPathRecord] =
-		useState<Record<string, string>>(() => {
-			const record: Record<string, string> = {};
-			for (const entry of Object.entries(
-				path.missingVariables,
-			)) {
-				const [label, subPath] = entry;
-
-				record[label] =
-					subPath.length > 0
-						? subPath[0].targetRule
-								.latexExpression
-						: "";
-			}
-			return record;
-		});
-
-	useEffect(() => {
-		setSubPathRecord(() => {
-			const record: Record<string, string> = {};
-			for (const entry of Object.entries(
-				path.missingVariables,
-			)) {
-				const [label, subPath] = entry;
-
-				record[label] =
-					subPath.length > 0
-						? subPath[0].targetRule
-								.latexExpression
-						: "";
-			}
-			return record;
-		});
-	}, [path]);
 
 	return (
 		<Box>
@@ -77,81 +32,34 @@ export const Graph: FC<GraphProps> = (props) => {
 			) : (
 				<Fragment />
 			)}
-
 			<Box>
-				{Object.entries(
-					path.missingVariables,
-				).map((entry, uindex) => {
-					{
-						const [label, subPaths] = entry;
-
-						if (subPaths.length === 0) {
-							return <Fragment />;
-						}
-						return (
-							<Box
-								key={`upper-${uindex}`}
-								style={{ paddingLeft: "2rem" }}
-							>
-								<Select
-									value={subPathRecord[label]}
-									onChange={(event) => {
-										setSubPathRecord((prev) => {
-											const next = { ...prev };
-											next[label] =
-												event.target.value;
-											return next;
-										});
-									}}
+				{Object.values(path.missingVariables).map(
+					(paths, uindex) => {
+						{
+							if (paths.length === 0) {
+								return <Fragment />;
+							}
+							return (
+								<Box
+									key={`upper-${uindex}`}
+									style={{ paddingLeft: "2rem" }}
 								>
-									{subPaths.map(
-										(subpath, index) => {
-											return (
-												<MenuItem
-													key={`sub-label-${subpath.targetRule.label}-${index}-${uindex}`}
-													value={
-														subpath.targetRule
-															.latexExpression
-													}
-												>
-													<Katex>
-														{
-															subpath.targetRule
-																.latexExpression
-														}
-													</Katex>{" "}
-													(
-													{
-														subpath.targetRule
-															.label
-													}
-													)
-												</MenuItem>
-											);
-										},
-									)}
-								</Select>
-								{subPaths.map(
-									(subPath, index) => {
-										if (
-											subPath.targetRule
-												.latexExpression !==
-											subPathRecord[label]
-										) {
+									{paths.map((path, index) => {
+										if (index !== 0) {
 											return <Fragment />;
 										}
 										return (
 											<Graph
 												key={`subgraph-${uindex}-${index}`}
-												path={subPath}
+												path={path}
 											/>
 										);
-									},
-								)}
-							</Box>
-						);
-					}
-				})}
+									})}
+								</Box>
+							);
+						}
+					},
+				)}
 			</Box>
 		</Box>
 	);

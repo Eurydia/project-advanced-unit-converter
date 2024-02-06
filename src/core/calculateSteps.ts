@@ -5,6 +5,12 @@ export type Path = {
 	variable: Variable;
 	targetRule: Equation;
 	missingVariables: Record<string, Path[]>;
+	/**
+	 * Let score of the current path be the average score
+	 * of the best and worst paths.
+	 * Lower score is better
+	 */
+	complexity: number;
 };
 
 const arrayDifference = (
@@ -58,6 +64,13 @@ export const calculateSteps = (
 	relatedRules: Equation[],
 ) => {
 	const result: Path[] = [];
+	if (
+		givenVariables
+			.map((givenVar) => givenVar.latexLabel)
+			.includes(targetVariable.latexLabel)
+	) {
+		return [];
+	}
 
 	if (relatedRules.length === 0) {
 		return [];
@@ -74,20 +87,6 @@ export const calculateSteps = (
 			relatedEquation.variables,
 		);
 
-		// const restrictedRules = relatedRules.filter(
-		// 	(rule) => {
-		// 		for (const v of rule.variables) {
-		// 			if (
-		// 				v.latexLabel ===
-		// 				targetVariable.latexLabel
-		// 			) {
-		// 				return false;
-		// 			}
-		// 		}
-		// 		return true;
-		// 	},
-		// );
-
 		const missingPathToVar: Record<
 			string,
 			Path[]
@@ -103,9 +102,9 @@ export const calculateSteps = (
 						return false;
 					}
 
-					for (const v of rule.variables) {
+					for (const ruleVar of rule.variables) {
 						if (
-							v.latexLabel ===
+							ruleVar.latexLabel ===
 							missingVar.latexLabel
 						) {
 							continue;
@@ -114,7 +113,7 @@ export const calculateSteps = (
 						for (const missingVar of missingVariables) {
 							if (
 								missingVar.latexLabel ===
-								v.latexLabel
+								ruleVar.latexLabel
 							) {
 								return false;
 							}
@@ -124,18 +123,40 @@ export const calculateSteps = (
 				},
 			);
 
-			missingPathToVar[missingVar.label] =
-				calculateSteps(
-					missingVar,
-					givenVariables,
-					restrictedRules,
-				);
+			const paths = calculateSteps(
+				missingVar,
+				givenVariables,
+				restrictedRules,
+			).sort(
+				(a, b) => a.complexity - b.complexity,
+			);
+			missingPathToVar[missingVar.label] = paths;
 		}
+
+		const staticComplexityCost =
+			Object.keys(missingPathToVar).length * 1000;
+
+		const missingVariableComplexityCost =
+			Object.values(missingPathToVar)
+				.map(
+					(paths) =>
+						paths
+							.map((path) => path.complexity)
+							.reduce(
+								(prev, curr) => prev + curr,
+								0,
+							) /
+						(paths.length + 1),
+				)
+				.reduce((prev, curr) => curr + prev, 0);
 
 		result.push({
 			variable: targetVariable,
 			targetRule: relatedEquation,
 			missingVariables: missingPathToVar,
+			complexity:
+				staticComplexityCost +
+				missingVariableComplexityCost,
 		});
 	}
 	return result;

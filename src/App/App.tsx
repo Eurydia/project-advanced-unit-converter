@@ -1,16 +1,25 @@
 import { FC, Fragment, useState } from "react";
 
-import { Box, CssBaseline } from "@mui/material";
+import {
+	Box,
+	CssBaseline,
+	Divider,
+	Typography,
+} from "@mui/material";
 import { grey } from "@mui/material/colors";
 
 import {
 	EquationRegistry,
+	Variable,
 	VariableRegistry,
+	variableGet,
 } from "@assets";
 
 import { AppLayout } from "App/AppLayout";
 import { VariableSelector } from "App/components/VariableSelector";
 import { EquationSelector } from "App/components/EquationSelector";
+import { Graph } from "App/components/Graph";
+import { calculateSteps } from "@core/calculateSteps";
 
 export const App: FC = () => {
 	const [targetVarLabels, setTargetVarlabels] =
@@ -22,12 +31,12 @@ export const App: FC = () => {
 		setExcludedEquations,
 	] = useState<string[]>([]);
 
-	// const targetVar =
-	// 	targetVarLabels.length > 0
-	// 		? variableGet(targetVarLabels[0])
-	// 		: variableGet("-");
-	// const givenVars: Variable[] =
-	// 	knownVarLabels.map(variableGet);
+	const targetVar =
+		targetVarLabels.length > 0
+			? variableGet(targetVarLabels[0])
+			: variableGet("-");
+	const givenVars: Variable[] =
+		knownVarLabels.map(variableGet);
 
 	return (
 		<Fragment>
@@ -108,7 +117,30 @@ export const App: FC = () => {
 						</Box>
 					}
 					slotCenter={
-						<Box height="calc(100vh - 400px)" />
+						<Box>
+							{calculateSteps(
+								targetVar,
+								givenVars,
+								EquationRegistry,
+							)
+								.sort(
+									(a, b) =>
+										a.complexity - b.complexity,
+								)
+								.map((path, index) => {
+									return (
+										<Fragment
+											key={`solution-${index}`}
+										>
+											<Typography>
+												Solution {index + 1}
+											</Typography>
+											<Graph path={path} />
+											<Divider />
+										</Fragment>
+									);
+								})}
+						</Box>
 					}
 				/>
 			</Box>
