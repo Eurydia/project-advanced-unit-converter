@@ -2,9 +2,9 @@
 	"compilerOptions": {
 		"baseUrl": "src",
 		"paths": {
+			"@assets": ["./assets"],
 			"@assets/*": ["./assets/*"],
-			"@core/*": ["./core/*"],
-			"@components/*": ["./app/components/*"]
+			"@core/*": ["./core/*"]
 		},
 		"removeComments": true,
 

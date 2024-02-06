@@ -18,7 +18,7 @@ const arrayDifference = (
 				return rightVar.label === leftVar.label;
 			})
 		) {
-			break;
+			continue;
 		}
 		diff.push(rightVar);
 	}

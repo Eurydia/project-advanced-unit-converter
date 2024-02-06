@@ -30,140 +30,6 @@ const equationRegister = (
 	});
 };
 
-// export const equationSearch = (
-// 	targetVar: Quantities,
-// 	startingVars: Quantities[],
-// ): Equation[] => {
-// 	const knownVars = [...startingVars];
-// 	let unusedEqs = [...EQUATION_REGISTRY];
-
-// 	const layers: [Quantities, Equation][][] = [];
-// 	let currentLayer = -1;
-
-// 	do {
-// 		const newLayer = equationApply(
-// 			unusedEqs,
-// 			knownVars,
-// 		);
-
-// 		for (const item of newLayer) {
-// 			const [newKnownVar, usedEq] = item;
-
-// 			unusedEqs = unusedEqs.filter(
-// 				(eq) => eq !== usedEq,
-// 			);
-// 			knownVars.push(newKnownVar);
-// 		}
-// 		layers.push(newLayer);
-// 		currentLayer++;
-// 	} while (
-// 		layers[currentLayer].length > 0 &&
-// 		layers[currentLayer].filter(
-// 			([v]) => v === targetVar,
-// 		).length === 0
-// 	);
-
-// 	const layerRecord: Partial<
-// 		Record<Quantities, Equation>
-// 	> = {};
-
-// 	for (const layer of layers) {
-// 		for (const item of layer) {
-// 			const [itemVar, itemEq] = item;
-// 			layerRecord[itemVar] = itemEq;
-// 		}
-// 	}
-// 	if (layerRecord[targetVar] === undefined) {
-// 		return [];
-// 	}
-
-// 	const steps: Equation[] = equationRetrace(
-// 		layerRecord,
-// 		[[targetVar, layerRecord[targetVar]!]],
-// 		startingVars,
-// 	);
-
-// 	return steps;
-// };
-
-// const equationRetrace = (
-// 	layerRecord: Partial<
-// 		Record<Quantities, Equation>
-// 	>,
-// 	goals: [Quantities, Equation][],
-// 	knownVars: Quantities[],
-// ): Equation[] => {
-// 	const steps: Equation[] = [];
-// 	const _knownVars = [...knownVars];
-
-// 	for (const goal of goals) {
-// 		const [goalVar, goalEq] = goal;
-// 		const diffVars = goalEq.variables.filter(
-// 			(eqVar) => !_knownVars.includes(eqVar),
-// 		);
-
-// 		if (diffVars.length === 1) {
-// 			steps.push(goalEq);
-// 			_knownVars.push(goalVar);
-// 			continue;
-// 		}
-
-// 		const nextGoals: [Quantities, Equation][] =
-// 			diffVars
-// 				.filter((diffVar) => diffVar !== goalVar)
-// 				.map((diffVar) => {
-// 					return [diffVar, layerRecord[diffVar]!];
-// 				});
-
-// 		steps.push(
-// 			goalEq,
-// 			...equationRetrace(
-// 				layerRecord,
-// 				nextGoals,
-// 				_knownVars,
-// 			),
-// 		);
-// 	}
-
-// 	return steps;
-// };
-
-// const equationApply = (
-// 	validEqs: Equation[],
-// 	knownVars: Quantities[],
-// ): [Quantities, Equation][] => {
-// 	const result: [Quantities, Equation][] = [];
-
-// 	for (const eq of validEqs) {
-// 		if (
-// 			equationMissingIndex(eq, knownVars) === 1
-// 		) {
-// 			const diffVars = eq.variables.filter(
-// 				(eqVar) => !knownVars.includes(eqVar),
-// 			);
-// 			result.push([diffVars[0], eq]);
-// 		}
-// 	}
-
-// 	return result;
-// };
-
-// const equationMissingIndex = (
-// 	eq: Equation,
-// 	knownVars: Quantities[],
-// ): number => {
-// 	let knownVarCount = 0;
-// 	const eqVars = eq.variables;
-
-// 	for (const knownVar of knownVars) {
-// 		if (eq.variables.includes(knownVar)) {
-// 			knownVarCount++;
-// 		}
-// 	}
-
-// 	return eqVars.length - knownVarCount;
-// };
-
 equationRegister(
 	"Ideal Gas Law",
 	"pV = nRT",
@@ -176,19 +42,56 @@ equationRegister(
 	[constantGet("Ideal gas constant")],
 );
 equationRegister(
-	"Ideal Gas Law",
-	"pV = nk_{B}N_{A}T",
+	"Avogadro's law",
+	"V\\propto n",
 	[
-		variableGet("Pressure"),
 		variableGet("Volume"),
-		variableGet("Particle number"),
+		variableGet("Amount of substance"),
+	],
+	[],
+);
+equationRegister(
+	"Boyle's law",
+	"P\\propto \\frac{1}{V}",
+	[
+		variableGet("Volume"),
+		variableGet("Pressure"),
+	],
+	[],
+);
+equationRegister(
+	"Charles' law",
+	"V\\propto T",
+	[
+		variableGet("Volume"),
 		variableGet("Temperature"),
 	],
-	[
-		constantGet("Boltzmann constant"),
-		constantGet("Avogadro constant"),
-	],
+	[],
 );
+equationRegister(
+	"Gay-Lussac's law",
+	"P\\propto T",
+	[
+		variableGet("Pressure"),
+		variableGet("Temperature"),
+	],
+	[],
+);
+
+// equationRegister(
+// 	"Ideal Gas Law",
+// 	"pV = nk_{B}N_{A}T",
+// 	[
+// 		variableGet("Pressure"),
+// 		variableGet("Volume"),
+// 		variableGet("Particle number"),
+// 		variableGet("Temperature"),
+// 	],
+// 	[
+// 		constantGet("Boltzmann constant"),
+// 		constantGet("Avogadro constant"),
+// 	],
+// );
 equationRegister(
 	"Definition of Pressure",
 	"p = \\frac{F}{A}",
@@ -211,11 +114,10 @@ equationRegister(
 );
 
 equationRegister(
-	"Density of a regular solid",
-	"\\rho = \\frac{m}{l\\times w\\times h}",
+	"Definition of volume",
+	"V = l\\times w\\times h",
 	[
-		variableGet("Density"),
-		variableGet("Mass"),
+		variableGet("Volume"),
 		variableGet("Length"),
 		variableGet("Width"),
 		variableGet("Height"),
@@ -235,6 +137,17 @@ equationRegister(
 );
 
 equationRegister(
+	"Newton's second law of motion",
+	"F = ma",
+	[
+		variableGet("Force"),
+		variableGet("Mass"),
+		variableGet("Acceleration"),
+	],
+	[],
+);
+
+equationRegister(
 	"Vapour density",
 	"\\rho = \\frac{nM}{V}",
 	[
@@ -243,4 +156,28 @@ equationRegister(
 		variableGet("Volume"),
 	],
 	[constantGet("Molar mass")],
+);
+
+equationRegister(
+	"First equation of motion",
+	"v = u + at",
+	[
+		variableGet("Speed"),
+		variableGet("Acceleration"),
+		variableGet("Initial speed"),
+		variableGet("Time"),
+	],
+	[],
+);
+
+equationRegister(
+	"Second equation of motion",
+	"s = ut + \\frac{1}{2}at^{2}",
+	[
+		variableGet("Distance"),
+		variableGet("Acceleration"),
+		variableGet("Initial speed"),
+		variableGet("Time"),
+	],
+	[],
 );

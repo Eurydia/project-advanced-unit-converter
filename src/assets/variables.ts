@@ -42,6 +42,7 @@ export const variableGet = (
 
 variableRegister("Pressure", "p");
 variableRegister("Area", "A");
+variableRegister("Acceleration", "a");
 variableRegister("Force", "F");
 variableRegister("Volume", "V");
 variableRegister("Temperature", "T");

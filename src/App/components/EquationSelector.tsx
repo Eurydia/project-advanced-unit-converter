@@ -1,4 +1,5 @@
 import { FC } from "react";
+
 import {
 	Checkbox,
 	List,
@@ -6,21 +7,29 @@ import {
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
+	useTheme,
 } from "@mui/material";
-import { Katex } from "App/components/Katex";
-import { variableGet } from "@assets/variables";
+import {
+	CheckBoxOutlineBlankRounded,
+	CheckBoxRounded,
+	IndeterminateCheckBoxRounded,
+} from "@mui/icons-material";
 
-type VariableSelectorProps = {
+import { Katex } from "App/components/Katex";
+
+type EquationSelectorProps = {
 	multiple?: boolean;
 	value: string[];
 	options: string[];
 	onChange: (nextValue: string[]) => void;
 };
-export const VariableSelector: FC<
-	VariableSelectorProps
+export const EquationSelector: FC<
+	EquationSelectorProps
 > = (props) => {
 	const { multiple, value, options, onChange } =
 		props;
+
+	const theme = useTheme();
 
 	const handleSelectedChange = (
 		label: string,
@@ -49,23 +58,40 @@ export const VariableSelector: FC<
 			{options.map((label, index) => {
 				return (
 					<ListItem
-						key={`target-variable-item-${index}`}
+						key={`target-equation-item-${index}`}
 					>
 						<ListItemButton
 							onClick={() =>
 								handleSelectedChange(label)
 							}
 						>
-							<ListItemText>
-								{label}{" "}
+							<ListItemText
+								sx={{
+									color: value.includes(label)
+										? theme.palette.text.disabled
+										: undefined,
+								}}
+							>
 								<Katex component="span">
-									{variableGet(label).latexLabel}
+									{label}
 								</Katex>
 							</ListItemText>
 							<ListItemIcon>
 								<Checkbox
 									checked={value.includes(label)}
 									disableRipple
+									icon={<CheckBoxRounded />}
+									checkedIcon={
+										<CheckBoxOutlineBlankRounded />
+									}
+									sx={{
+										"color":
+											theme.palette.primary.main,
+										"&.Mui-checked": {
+											color:
+												theme.palette.grey[600],
+										},
+									}}
 								/>
 							</ListItemIcon>
 						</ListItemButton>

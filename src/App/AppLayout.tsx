@@ -1,63 +1,112 @@
-import {
-	Box,
-	Container,
-	Grid,
-} from "@mui/material";
-import { blue } from "@mui/material/colors";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
-export const AppLayout: FC = () => {
+import {
+	Grid,
+	Stack,
+	useMediaQuery,
+	useTheme,
+} from "@mui/material";
+
+const AppLayoutXS: FC<AppLayoutProps> = (
+	props,
+) => {
+	const {
+		slotCenter,
+		slotSide,
+		slotTopLeft,
+		slotTopRight,
+	} = props;
 	return (
-		<Container
-			maxWidth="lg"
-			sx={{
-				backgroundColor: blue["400"],
-			}}
+		<Stack spacing={2}>
+			{slotTopLeft}
+			{slotTopRight}
+			{slotSide}
+			{slotCenter}
+		</Stack>
+	);
+};
+
+const AppLayoutSM: FC<AppLayoutProps> = (
+	props,
+) => {
+	const {
+		slotCenter,
+		slotSide,
+		slotTopLeft,
+		slotTopRight,
+	} = props;
+
+	return (
+		<Grid
+			container
+			spacing={2}
 		>
-			<Grid container>
-				<Grid
-					xs={12}
-					item
-					height="600px"
-					width="100%"
-					sx={{
-						borderRadius: 4,
-						backgroundColor: blue["600"],
-					}}
-				></Grid>
-				<Grid
-					xs={12}
-					item
-					height="200px"
-					width="100%"
-					sx={{
-						borderRadius: 4,
-						backgroundColor: blue["600"],
-					}}
-				></Grid>
-				<Grid
-					xs={12}
-					sm={6}
-					item
-					height="200px"
-					width="100%"
-					sx={{
-						borderRadius: 4,
-						backgroundColor: blue["600"],
-					}}
-				></Grid>
-				<Grid
-					xs={12}
-					sm={6}
-					item
-					height="200px"
-					width="100%"
-					sx={{
-						borderRadius: 4,
-						backgroundColor: blue["600"],
-					}}
-				></Grid>
+			<Grid
+				item
+				sm={4}
+			>
+				{slotTopLeft}
 			</Grid>
-		</Container>
+			<Grid
+				item
+				sm={4}
+			>
+				{slotTopRight}
+			</Grid>
+			<Grid
+				item
+				sm={4}
+			>
+				{slotSide}
+			</Grid>
+			<Grid
+				item
+				sm={12}
+			>
+				{slotCenter}
+			</Grid>
+		</Grid>
+	);
+};
+
+type AppLayoutProps = {
+	slotTopLeft: ReactNode;
+	slotTopRight: ReactNode;
+	slotSide: ReactNode;
+	slotCenter: ReactNode;
+};
+export const AppLayout: FC<AppLayoutProps> = (
+	props,
+) => {
+	const {
+		slotCenter,
+		slotSide,
+		slotTopLeft,
+		slotTopRight,
+	} = props;
+
+	const theme = useTheme();
+	const isBreakpointXS = useMediaQuery(
+		theme.breakpoints.down("sm"),
+	);
+
+	if (isBreakpointXS) {
+		return (
+			<AppLayoutXS
+				slotTopLeft={slotTopLeft}
+				slotTopRight={slotTopRight}
+				slotSide={slotSide}
+				slotCenter={slotCenter}
+			/>
+		);
+	}
+
+	return (
+		<AppLayoutSM
+			slotTopLeft={slotTopLeft}
+			slotTopRight={slotTopRight}
+			slotSide={slotSide}
+			slotCenter={slotCenter}
+		/>
 	);
 };

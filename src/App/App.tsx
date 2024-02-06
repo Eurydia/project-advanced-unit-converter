@@ -1,115 +1,117 @@
 import { FC, Fragment, useState } from "react";
 
-import {
-	Box,
-	Container,
-	CssBaseline,
-	Grid,
-	Typography,
-} from "@mui/material";
+import { Box, CssBaseline } from "@mui/material";
+import { grey } from "@mui/material/colors";
 
 import {
-	Variable,
+	EquationRegistry,
 	VariableRegistry,
-	variableGet,
-} from "../assets/variables";
-import { EquationRegistry } from "../assets/equations";
-import { calculateSteps } from "../core/calculateSteps";
+} from "@assets";
 
-import { Graph } from "./components/Graph";
-import { VariableSelector } from "./components/VariableSelector";
 import { AppLayout } from "App/AppLayout";
+import { VariableSelector } from "App/components/VariableSelector";
+import { EquationSelector } from "App/components/EquationSelector";
 
 export const App: FC = () => {
 	const [targetVarLabels, setTargetVarlabels] =
 		useState<string[]>([]);
 	const [knownVarLabels, setKnownVarLabels] =
 		useState<string[]>([]);
+	const [
+		excludedEquations,
+		setExcludedEquations,
+	] = useState<string[]>([]);
 
-	const targetVar =
-		targetVarLabels.length > 0
-			? variableGet(targetVarLabels[0])
-			: variableGet("-");
-	const givenVars: Variable[] =
-		knownVarLabels.map(variableGet);
+	// const targetVar =
+	// 	targetVarLabels.length > 0
+	// 		? variableGet(targetVarLabels[0])
+	// 		: variableGet("-");
+	// const givenVars: Variable[] =
+	// 	knownVarLabels.map(variableGet);
 
 	return (
 		<Fragment>
 			<CssBaseline />
-			<AppLayout />
+			<Box
+				padding={2}
+				sx={{
+					backgroundColor: grey["400"],
+				}}
+			>
+				<AppLayout
+					slotTopLeft={
+						<Box
+							height={{
+								xs: "200px",
+								sm: "400px",
+							}}
+							sx={{
+								overflowY: "auto",
+								scrollbarWidth: "thin",
+								backgroundColor: "white",
+								borderRadius: 4,
+							}}
+						>
+							<VariableSelector
+								value={targetVarLabels}
+								onChange={setTargetVarlabels}
+								options={Object.keys(
+									VariableRegistry,
+								)}
+							/>
+						</Box>
+					}
+					slotTopRight={
+						<Box
+							height={{
+								xs: "200px",
+								sm: "400px",
+							}}
+							sx={{
+								overflowY: "auto",
+								scrollbarWidth: "thin",
+								backgroundColor: "white",
+								borderRadius: 4,
+							}}
+						>
+							<VariableSelector
+								multiple
+								value={knownVarLabels}
+								onChange={setKnownVarLabels}
+								options={Object.keys(
+									VariableRegistry,
+								)}
+							/>
+						</Box>
+					}
+					slotSide={
+						<Box
+							height={{
+								xs: "200px",
+								sm: "400px",
+							}}
+							sx={{
+								overflowY: "auto",
+								scrollbarWidth: "thin ",
+								backgroundColor: "white",
+								borderRadius: 4,
+							}}
+						>
+							<EquationSelector
+								multiple
+								value={excludedEquations}
+								onChange={setExcludedEquations}
+								options={EquationRegistry.map(
+									(eq) => eq.latexExpression,
+								)}
+							/>
+						</Box>
+					}
+					slotCenter={
+						<Box height="calc(100vh - 400px)" />
+					}
+				/>
+			</Box>
 		</Fragment>
-		// <Container maxWidth="md">
-		// 	<CssBaseline />
-		// 	<Grid container>
-		// 		<Grid
-		// 			item
-		// 			xs={12}
-		// 			sm
-		// 		>
-		// 			<Typography>To Find</Typography>
-		// 			<Box
-		// 				height="300px"
-		// 				overflow="auto"
-		// 			>
-		// 				<VariableSelector
-		// 					value={targetVarLabels}
-		// 					onChange={setTargetVarlabels}
-		// 					options={Object.keys(
-		// 						VariableRegistry,
-		// 					)}
-		// 				/>
-		// 			</Box>
-		// 		</Grid>
-		// 		<Grid
-		// 			item
-		// 			xs={12}
-		// 			sm
-		// 		>
-		// 			<Typography>Known</Typography>
-		// 			<Box
-		// 				height="300px"
-		// 				overflow="auto"
-		// 			>
-		// 				<VariableSelector
-		// 					multiple
-		// 					value={knownVarLabels}
-		// 					onChange={setKnownVarLabels}
-		// 					options={Object.keys(
-		// 						VariableRegistry,
-		// 					)}
-		// 				/>
-		// 			</Box>
-		// 		</Grid>
-		// 	</Grid>
-		// 	<Box
-		// 		sx={{
-		// 			borderRadius: "0.5rem",
-		// 			borderColor: "black",
-		// 			borderStyle: "solid",
-		// 			borderWidth: 2,
-		// 			padding: 4,
-		// 			margin: 4,
-		// 		}}
-		// 	>
-		// 		{targetVar.latexLabel === "" ? (
-		// 			<Fragment />
-		// 		) : (
-		// 			<Fragment>
-		// 				{calculateSteps(
-		// 					targetVar,
-		// 					givenVars,
-		// 					EquationRegistry,
-		// 				).map((path, index) => {
-		// 					return (
-		// 						<Graph
-		// 							key={`topgraph-${index}`}
-		// 							path={path}
-		// 						/>
-		// 					);
-		// 				})}
-		// 			</Fragment>
-		// 		)}
-		// 	</Box>
-		// </Container>
 	);
 };

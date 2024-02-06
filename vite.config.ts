@@ -16,6 +16,7 @@ export default defineConfig({
 							"@mui/material",
 							"@mui/icons-material",
 							"katex",
+							"@fontsource",
 						];
 						for (const vendor of vendors) {
 							if (id.search(vendor) !== -1) {

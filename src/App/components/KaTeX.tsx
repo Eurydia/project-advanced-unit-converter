@@ -23,7 +23,9 @@ export const Katex: FC<KatexProps> = (props) => {
 		if (containerRef.current === null) {
 			return;
 		}
-		katex.render(children, containerRef.current);
+		katex.render(children, containerRef.current, {
+			throwOnError: false,
+		});
 	}, [children]);
 
 	return (
